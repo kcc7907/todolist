@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid red;
+    }
+
+    ul>li {
+        border: 1px solid black;
+    }
+</style>
+
+<body>
+    <button type="button" id="btn_add">新增</button>
+    <ul id="my_list">
+    </ul>
+
+    <script>
+        var my_btn = document.querySelector("#btn_add");
+        let my_list = document.querySelector("#my_list");
+
+        my_btn.addEventListener("click", function () {
+            // code
+            let list = `<li><button type="button" class="btn_remove">移除1</button></li>`
+
+            my_list.insertAdjacentHTML("beforeend", list);
+        });
+
+        // 頁面上任何地方的點擊
+        document.addEventListener("click", function (e) {
+
+            // 1. e.target 指的是點擊到的那個元素
+            // 2. 判斷點擊的那個元素，有沒有 btn 這個 class。
+            if (e.target.classList.contains("btn_remove")) { // true or false
+                // my_list.innerHTML = '';
+                // e.target.closest("li").remove();
+                // my_list.removeChild(my_list.firstChild);
+                removeTags("li");
+            }
+
+        });
+    </script>
+</body>
+
+</html>
