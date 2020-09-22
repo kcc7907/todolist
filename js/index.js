@@ -91,9 +91,9 @@ let btn_update = document.querySelectorAll('btn_update');
 task_list.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn_update")) {
         let task_name_update = document.getElementsByClassName('task_name_update');
-        // e.target.closest("input").classList.remove('-on');
+        task_name_update.remove();
 
         // e.target.closest("input").classList.toggle("on");
-        task_name_update.classList.remove("-on");
+        // e.target.offsetParent.closest("task_name_update").classList.remove("-on");
     }
 });
