@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,28 @@
   <title>Document</title>
 
   <style>
-    *{
+    * {
       box-sizing: border-box;
     }
-    :root{
+
+    :root {
       --header-height: 60px;
       --aside-width: 240px;
 
-      /*font-size: 62.5%;*/ /* 10px */ /*文字統一 改這個 其他單位rem*/
+      /*font-size: 62.5%;*/
+      /* 10px */
+      /*文字統一 改這個 其他單位rem*/
     }
-    body{
+
+    body {
       margin: 0px;
     }
-    img{
+
+    img {
       max-width: 100%;
     }
-    header.header{
+
+    header.header {
       /*font-size: 1.6rem;*/
       border: 1px solid red;
       position: sticky;
@@ -31,7 +38,8 @@
       background-color: lightgray;
       height: var(--header-height);
     }
-    aside.aside{
+
+    aside.aside {
       border: 1px solid green;
       position: fixed;
       top: var(--header-height);
@@ -41,43 +49,52 @@
       height: calc(100% - var(--header-height));
       overflow-y: auto;
     }
-    aside.aside > nav.nav > ul.nav_list{
+
+    aside.aside>nav.nav>ul.nav_list {
       margin: 0;
       padding: 0;
       list-style: none;
       border: 1px solid red;
     }
-    aside.aside > nav.nav > ul.nav_list > li{
+
+    aside.aside>nav.nav>ul.nav_list>li {
       border: 1px solid black;
     }
-    aside.aside > nav.nav > ul.nav_list > li > a{
+
+    aside.aside>nav.nav>ul.nav_list>li>a {
       border: 1px solid purple;
       text-decoration: none;
       display: block;
       width: 100%;
       padding: 5px 10px;
     }
-    aside.aside button.btn_hamburger, header.header button.btn_hamburger{
+
+    aside.aside button.btn_hamburger,
+    header.header button.btn_hamburger {
       display: none;
     }
-    @media all and (max-width: 767px){
-      aside.aside{
+
+    @media all and (max-width: 767px) {
+      aside.aside {
         top: 0;
         height: 100%;
         transform: translateX(-100%);
 
         transition: all 1s;
       }
-      aside.aside.-on{
+
+      aside.aside.-on {
         transform: translateX(0%);
       }
-      aside.aside button.btn_hamburger, header.header button.btn_hamburger{
+
+      aside.aside button.btn_hamburger,
+      header.header button.btn_hamburger {
         display: inline-block;
       }
 
     }
 
-    main.main{
+    main.main {
       border: 1px solid blue;
       width: calc(100% - var(--aside-width));
       margin-left: var(--aside-width);
@@ -86,13 +103,14 @@
       padding: 20px;
     }
 
-    @media all and (max-width:767px){
-      main.main{
+    @media all and (max-width:767px) {
+      main.main {
         margin-left: 0;
         width: 100%;
       }
     }
-    main.main ul.item_list{
+
+    main.main ul.item_list {
       margin: 0;
       padding: 0;
       list-style: none;
@@ -102,33 +120,41 @@
       flex-direction: row;
       flex-wrap: wrap;
     }
-    main.main ul.item_list > li{
+
+    main.main ul.item_list>li {
       border: 1px solid black;
-      width: calc( (100% - 60px) / 4);
+      width: calc((100% - 60px) / 4);
       margin-right: 20px;
       margin-bottom: 20px;
     }
-    main.main ul.item_list > li:nth-child(4n){
+
+    main.main ul.item_list>li:nth-child(4n) {
       margin-right: 0;
     }
-    @media all and (max-width:767px){
-      main.main ul.item_list > li{
-        width: calc( (100% - 20px) / 2);
+
+    @media all and (max-width:767px) {
+      main.main ul.item_list>li {
+        width: calc((100% - 20px) / 2);
       }
-      main.main ul.item_list > li:nth-child(2n){
+
+      main.main ul.item_list>li:nth-child(2n) {
         margin-right: 0;
       }
     }
-    main.main ul.item_list > li > a{
+
+    main.main ul.item_list>li>a {
       border: 1px solid blue;
       display: block;
       text-decoration: none;
     }
-    main.main ul.item_list > li > a div.img_block{
+
+    main.main ul.item_list>li>a div.img_block {
       border: 1px solid red;
-      font-size: 0px; /* ? */
+      font-size: 0px;
+      /* ? */
     }
-    main.main ul.item_list > li > a span.item_text{
+
+    main.main ul.item_list>li>a span.item_text {
       display: inline-block;
       width: 100%;
       white-space: nowrap;
@@ -137,6 +163,7 @@
     }
   </style>
 </head>
+
 <body>
   <header class="header">
     <button type="button" class="btn_hamburger">按鈕</button>
@@ -376,11 +403,12 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script>
-    $(function(){
-      $("button.btn_hamburger").on("click", function(){
+    $(function () {
+      $("button.btn_hamburger").on("click", function () {
         $("aside.aside").toggleClass("-on");
       });
     });
   </script>
 </body>
+
 </html>

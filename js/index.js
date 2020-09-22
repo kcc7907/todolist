@@ -1,18 +1,21 @@
 let task_name = document.querySelectorAll(".task_name")[0];
 let task_add_block = document.querySelectorAll('.task_add_block')[0];
-
-task_name.addEventListener('focus', function () {
-    task_add_block.classList.add("-on");
-})
-
-task_name.addEventListener('blur', function () {
-    task_add_block.classList.remove("-on");
-})
-
 let task_add = document.querySelectorAll('.task_add')[0];
 let task_list = document.querySelectorAll('.task_list')[0];
 
-task_add.addEventListener('click', function () {
+// <==========  第一步：基本介面及 text 欄位事件  ==========>
+
+task_name.addEventListener('focus', () => {
+    task_add_block.classList.add("-on");
+})
+
+task_name.addEventListener('blur', () => {
+    task_add_block.classList.remove("-on");
+})
+
+// <==========      第二步：新增待辦事項       ==========>
+
+task_add.addEventListener('click', () => {
     let task_text = (task_name.value).trim();
     if (task_text != "") {
         let li_list = `<li><div class="item_flex"><div class="left_block"><div class="btn_flex"><button type="button" class="btn_up">往上</button><button type="button" class="btn_down">往下</button></div></div><div class="middle_block"><div class="star_block"><span class="star" data-star="1"><i class="fas fa-star"></i></span><span class="star" data-star="2"><i class="fas fa-star"></i></span><span class="star" data-star="3"><i class="fas fa-star"></i></span><span class="star" data-star="4"><i class="fas fa-star"></i></span><span class="star" data-star="5"><i class="fas fa-star"></i></span></div><p class="para">${task_text}</p><input type="text" class="task_name_update -none" placeholder="更新待辦事項…" value="${task_text}">
@@ -22,7 +25,7 @@ task_add.addEventListener('click', function () {
     }
 });
 
-task_name.addEventListener('keydown', function (event) {
+task_name.addEventListener('keydown', (event) => {
     let task_text = (task_name.value).trim();
     if (task_text != "") {
         if (event.which === 13) {
@@ -33,15 +36,18 @@ task_name.addEventListener('keydown', function (event) {
         }
     };
 });
+
+// <==========      第三步：移除與清空      ==========>
+
 let btn_empty = document.getElementsByClassName('btn_empty')[0];
-btn_empty.addEventListener('click', function (a) {
+btn_empty.addEventListener('click', (a) => {
     let x = confirm('是否確認清空?');
     if (x) {
         var child = task_list.children;
         for (let i = 0; i < child.length; i++) {
             child[i].classList.add("fade");
         }
-        setTimeout(function () {
+        setTimeout(() => {
             task_list.innerHTML = '';
         }, 1000);
         // task_list.addEventListener("transitionend", function clearall(e) {
@@ -55,12 +61,13 @@ btn_empty.addEventListener('click', function (a) {
         return;
     };
 });
-task_list.addEventListener("click", function (e) {
+
+task_list.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn_delete")) {
         let x = confirm('是否確認移除?');
         if (x) {
             e.target.closest("li").classList.add("fade");
-            e.target.closest("li").addEventListener("transitionend", function (a) {
+            e.target.closest("li").addEventListener("transitionend", (a) => {
                 a.target.closest("li").remove();
             });
         } else {
@@ -87,13 +94,214 @@ task_list.addEventListener("click", function (e) {
 //     }
 // });input
 
+// <==========      第四步：更新待辦事項      ==========>
+
 let btn_update = document.querySelectorAll('btn_update');
+
 task_list.addEventListener("click", (e) => {
     if (e.target.classList.contains("btn_update")) {
-        let task_name_update = document.getElementsByClassName('task_name_update');
-        task_name_update.remove();
-
-        // e.target.closest("input").classList.toggle("on");
-        // e.target.offsetParent.closest("task_name_update").classList.remove("-on");
+        let update = e.target.closest("li").querySelector('.task_name_update');
+        let para = e.target.closest("li").querySelector('.para');
+        let update_text = (update.value).trim();
+        if (update.classList.contains("-none")) {
+            update.classList.remove("-none");
+            para.classList.add("-none");
+        } else {
+            if (update_text == '') {
+                alert('請輸入待辦事項');
+            } else {
+                para.innerHTML = update_text;
+                update.classList.add("-none");
+                para.classList.remove("-none");
+            }
+        }
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <==========      資料更新至 localStorage      ==========>
+
+
+// <==========   第一步：新增資料至 localStorage  ==========>
+
+// 儲存到 localStorage
+let item_id = Date.now(); // timestamp 當做該項的 id
+
+
+let task = {
+    "item_id": item_id,
+    // "name": task_text, // 新增的待辦事項文字
+    "star": 0 // 預設 0
+};
+let tasks = JSON.parse(localStorage.getItem("tasks"));
+if (tasks) { // 若存在
+    tasks.unshift(task);
+} else { // 若不存在
+    tasks = [task];
+}
+localStorage.setItem("tasks", JSON.stringify(tasks));
+
+// <==========   第二步：從 localStorage 取得資料  ==========>
+
+function get_tasks() {
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    if (tasks) {
+        let list_html = "";
+        tasks.forEach(function (item, i) {
+
+            list_html += `
+        <li data-id="${item.item_id}">
+          <div class="item_flex">
+            <div class="left_block">
+              <div class="btn_flex">
+                <button type="button" class="btn_up">往上</button>
+                <button type="button" class="btn_down">往下</button>
+              </div>
+            </div>
+            <div class="middle_block">
+              <div class="star_block">
+                <span class="star${(item.star >= 1 ? " -on" : "")}" data-star="1"><i class="fas fa-star"></i></span>
+                <span class="star${(item.star >= 2 ? " -on" : "")}" data-star="2"><i class="fas fa-star"></i></span>
+                <span class="star${(item.star >= 3 ? " -on" : "")}" data-star="3"><i class="fas fa-star"></i></span>
+                <span class="star${(item.star >= 4 ? " -on" : "")}" data-star="4"><i class="fas fa-star"></i></span>
+                <span class="star${(item.star >= 5 ? " -on" : "")}" data-star="5"><i class="fas fa-star"></i></span>
+              </div>
+              <p class="para">${item.name}</p>
+              <input type="text" class="task_name_update -none" placeholder="更新待辦事項…" value="${item.name}">
+            </div>
+            <div class="right_block">
+              <div class="btn_flex">
+                <button type="button" class="btn_update">更新</button>
+                <button type="button" class="btn_delete">移除</button>
+              </div>
+            </div>
+          </div>
+        </li>
+      `;
+
+        });
+
+        let ul_task_list = document.getElementsByClassName("task_list")[0];
+        ul_task_list.innerHTML = list_html;
+    }
+}
+
+// <==========   第三步：移除 localStorage 裡的資料  ==========>
+
+// 取得待辦事項的 id
+// let item_id = e.target.closest("li").getAttribute("data-id");
+// 從 localStorage 取得資料
+// let tasks = JSON.parse(localStorage.getItem("tasks"));
+// 準備用來放要存到 localStorage 裡的資料
+let updated_tasks = [];
+
+tasks.forEach(function (task, i) {
+    if (item_id != task.item_id) { // id 不相同的時候
+        updated_tasks.push(task); // 將物件資料放至新的陣列中
+    }
+});
+
+// 回存至 localStorage
+localStorage.setItem("tasks", JSON.stringify(updated_tasks));
+
+// 清空 localStorage 資料： localStorage.clear();
+
+
+
+// <==========   第四步：更新 localStorage 中，name 的資料  ==========>
+
+
+// 取得待辦事項的 id
+// let item_id = e.target.closest("li").getAttribute("data-id");
+// 從 localStorage 取得資料
+// let tasks = JSON.parse(localStorage.getItem("tasks"));
+tasks.forEach(function (task, i) {
+    if (item_id == task.item_id) { // id 相同
+        // tasks[i].name = update_task_name; // 資料更新
+    }
+});
+// 回存至 localStorage
+localStorage.setItem("tasks", JSON.stringify(tasks));
+
+
+// <==========   第五步：更新 localStorage 中的排序  ==========>
+
+
+// 寫成一個函式，因為可能會重覆呼叫
+function items_sort(item_id, direction) {
+
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+
+    // 準備用來儲存更新後的待辦事項陣列
+    let updated_tasks = [];
+
+    if (direction == "up") { // 往上
+        tasks.forEach(function (task, i) {
+            if (item_id == task.item_id) {
+                updated_tasks.splice(i - 1, 0, task);
+            } else {
+                updated_tasks.push(task);
+            }
+        });
+    }
+
+    if (direction == "down") { // 往下
+        // 用來暫存下一個 item_id
+        let temp_next_item_id_index;
+        tasks.forEach(function (task, i) {
+            if (item_id == task.item_id) {
+
+                // 暫存找到 item 的下一個 item 索引值
+                temp_next_item_id_index = i + 1;
+
+                // 先放找到 item 的下一個
+                updated_tasks.push(tasks[i + 1]);
+
+                // 再放找到的這個 item
+                updated_tasks.push(task);
+
+            } else {
+                if (temp_next_item_id_index != i) {
+                    updated_tasks.push(task);
+                }
+            }
+        });
+    }
+
+    localStorage.setItem("tasks", JSON.stringify(updated_tasks));
+}
+
+
+// <==========   第六步：更新 localStorage 中，star 的資料  ==========>
+
+
+// 取得待辦事項的 id
+// let item_id = span_el.closest("li").getAttribute("data-id");
+
+// 從 localStorage 取得資料
+// let tasks = JSON.parse(localStorage.getItem("tasks"));
+// tasks.forEach(function (task, i) {
+//     if (item_id == task.item_id) { // id 相同
+//         tasks[i].star = current_star; // 更新星號數
+//     }
+// });
+
+// 回存至 localStorage
+localStorage.setItem("tasks", JSON.stringify(tasks));
