@@ -1,14 +1,60 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-    <input type="text" id="text_input">
-<script>
-    let x = text_input.value;
-</script>
+    <input type="checkbox" id="check_all"><label for="check_all">全選</label>
+
+    <hr>
+
+    <input type="checkbox" class="item" id="option1"> <label for="option1">選項一</label>
+    <input type="checkbox" class="item" id="option2"> <label for="option2">選項二</label>
+    <input type="checkbox" class="item" id="option3"> <label for="option3">選項三</label>
+    <script>
+        let check_all = document.querySelector('#check_all');
+        let item = document.querySelectorAll('.item');
+        let item1 = document.querySelector('#option1');
+        let item2 = document.querySelector('#option2');
+        let item3 = document.querySelector('#option3');
+
+        check_all.addEventListener("click", function () {
+            for (let i = 0; i < item.length; i++) {
+                if (check_all.checked) {
+                    item[i].checked = true;
+                } else {
+                    item[i].checked = false;
+                };
+            };
+        });
+        let itemc = document.querySelectorAll('.item:checked').length;
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains("item")) {
+                for (let i = 0; i < item.length; i++) {
+                    let itemc = document.querySelectorAll('.item:checked').length;
+                    if (item[i].checked && itemc >= (item.length - 1) && !check_all.checked) {
+                        check_all.checked = true;
+                    } else {
+                        check_all.checked = false;
+                    };
+                }
+            }
+        });
+        // document.addEventListener('click', function () {
+        //     if (item1.checked && item2.checked && item3.checked) {
+        //         check_all.checked = true;
+        //     } else {
+        //         check_all.checked = false;
+        //     };
+        // })
+        document.cookie = "food_id=abc";
+        document.cookie = "ad_code=year2020";
+    </script>
 </body>
+
 </html>

@@ -33,42 +33,40 @@ task_name.addEventListener('keydown', function (event) {
         }
     };
 });
-
 let btn_empty = document.getElementsByClassName('btn_empty')[0];
-
 btn_empty.addEventListener('click', function (a) {
     let x = confirm('是否確認清空?');
     if (x) {
         var child = task_list.children;
         for (let i = 0; i < child.length; i++) {
             child[i].classList.add("fade");
-        };
-        task_list.addEventListener("transitionend", function clearall() {
-            console.log(a.target);
-            console.log(this);
+        }
+        setTimeout(function () {
             task_list.innerHTML = '';
-        });
+        }, 1000);
+        // task_list.addEventListener("transitionend", function clearall(e) {
+        //     //console.log(a.target);
+        //     //console.log(this);
+        //     task_list.innerHTML = '';
+        //     //e.removeEventListener("transitionend");
+        //     alert("test");
+        // });
     } else {
         return;
     };
-
-   
 });
-
-
 task_list.addEventListener("click", function (e) {
-    if (e.target.classList[0] === ("btn_delete")) {
-        let yy = document.querySelector('.btn_delete');
+    if (e.target.classList.contains("btn_delete")) {
         let x = confirm('是否確認移除?');
         if (x) {
             e.target.closest("li").classList.add("fade");
-            e.target.closest("li").addEventListener("transitionend", function () {
-                e.target.closest("li").remove();
+            e.target.closest("li").addEventListener("transitionend", function (a) {
+                a.target.closest("li").remove();
             });
         } else {
             return;
         }
-    }
+    };
 });
 
 // document.addEventListener("click", function (e) {
@@ -87,4 +85,15 @@ task_list.addEventListener("click", function (e) {
 //             ul_task_list.innerHTML = '';
 //         });
 //     }
-// });
+// });input
+
+let btn_update = document.querySelectorAll('btn_update');
+task_list.addEventListener("click", (e) => {
+    if (e.target.classList.contains("btn_update")) {
+        let task_name_update = document.getElementsByClassName('task_name_update');
+        // e.target.closest("input").classList.remove('-on');
+
+        // e.target.closest("input").classList.toggle("on");
+        task_name_update.classList.remove("-on");
+    }
+});
