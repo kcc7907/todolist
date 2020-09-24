@@ -155,28 +155,22 @@ task_list.addEventListener('click', (e) => {
 
 // <==========      第六步：重要性的星號      ==========>
 
-let star = document.querySelectorAll('.star');
-
 task_list.addEventListener('click', (e) => {
-    console.log(e.target);
-    // e.target.closest("li").querySelector('.star').classList.add("-on");console.log(e.target);
-    // if (e.target.closest("li")) {
-    //     console.log(e.target);
-    //     // console.log(e.target.getAttribute('data-star'));
-    //     console.log(e.target.dataset.star);
-
-    // let item_id = e.target.closest("li").getAttribute("data-id");
-    // console.log(item_id);
-    // let tasks = JSON.parse(localStorage.getItem("tasks"));
-    // tasks.forEach(function (task, i) {
-    //     if (item_id == task.item_id) {
-    //         tasks[i].star = current_star;
-    //     }
-    // });
-    // localStorage.setItem("tasks", JSON.stringify(tasks));
-    // }
-}, false);
-
+    if (e.target.parentNode.parentNode.classList[0] === ('star')) {
+        console.log(e.target.parentNode.parentNode);
+        let item_id = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
+        let current_star = e.target.parentNode.parentNode.getAttribute('data-star');
+        // 從 localStorage 取得資料
+        let tasks = JSON.parse(localStorage.getItem("tasks"));
+        tasks.forEach(function (task, i) {
+            if (item_id == task.item_id) { // id 相同
+                tasks[i].star = current_star; // 更新星號數
+            }
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        get_tasks();
+    }
+});
 
 
 
