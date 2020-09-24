@@ -45,24 +45,24 @@ task_name.addEventListener('keydown', (event) => {
 // <==========      第三步：移除與清空      ==========>
 
 let btn_empty = document.getElementsByClassName('btn_empty')[0];
-btn_empty.addEventListener('click', (a) => {
+btn_empty.addEventListener('click', (e) => {
     let x = confirm('是否確認清空?');
     if (x) {
         var child = task_list.children;
         for (let i = 0; i < child.length; i++) {
             child[i].classList.add("fade");
         }
-        setTimeout(() => {
-            task_list.innerHTML = '';
-            localStorage.clear()
-        }, 1000);
-        // task_list.addEventListener("transitionend", function clearall(e) {
-        //     //console.log(a.target);
-        //     //console.log(this);
+        // setTimeout(() => {
         //     task_list.innerHTML = '';
-        //     //e.removeEventListener("transitionend");
-        //     alert("test");
-        // });
+        //     localStorage.clear()
+        // }, 1000);
+        task_list.addEventListener("transitionend", function clearAll(a) {
+            //console.log(a.target);
+            //console.log(this);
+            task_list.innerHTML = '';
+            task_list.removeEventListener("transitionend", clearAll);
+        });
+        localStorage.clear()
     } else {
         return;
     };
@@ -155,22 +155,56 @@ task_list.addEventListener('click', (e) => {
 
 // <==========      第六步：重要性的星號      ==========>
 
+// task_list.addEventListener('click', (e) => {
+//     if (e.target.parentNode.parentNode.classList[0] === ('star')) {
+//         console.log(e.target.parentNode.parentNode);
+//         let item_id = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
+//         let current_star = e.target.parentNode.parentNode.getAttribute('data-star');
+//         // 從 localStorage 取得資料
+//         let tasks = JSON.parse(localStorage.getItem("tasks"));
+//         tasks.forEach(function (task, i) {
+//             if (item_id == task.item_id) { // id 相同
+//                 tasks[i].star = current_star; // 更新星號數
+//             }
+//         });
+//         localStorage.setItem("tasks", JSON.stringify(tasks));
+//         get_tasks();
+//     }
+// });
+
 task_list.addEventListener('click', (e) => {
-    if (e.target.parentNode.parentNode.classList[0] === ('star')) {
-        console.log(e.target.parentNode.parentNode);
-        let item_id = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
-        let current_star = e.target.parentNode.parentNode.getAttribute('data-star');
-        // 從 localStorage 取得資料
+    if (e.target.closest("span").classList[0] === ('star')) {
+        let span = e.target.closest("span");
+        let item_id = span.closest("li").getAttribute("data-id");
+        let current_star = span.getAttribute('data-star');
         let tasks = JSON.parse(localStorage.getItem("tasks"));
         tasks.forEach(function (task, i) {
-            if (item_id == task.item_id) { // id 相同
-                tasks[i].star = current_star; // 更新星號數
+            if (item_id == task.item_id) {
+                tasks[i].star = current_star;
             }
         });
         localStorage.setItem("tasks", JSON.stringify(tasks));
+        // update_star();
         get_tasks();
     }
 });
+
+
+
+function update_star() {
+    // let item_id = e.target.closest("li").getAttribute("data-id");
+    // let item_id = span.closest("li").getAttribute("data-id");
+    // let current_star = span.getAttribute('data-star');
+
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    tasks.forEach(function (task, i) {
+        if (item_id == task.item_id) {
+            tasks[i].star = current_star;
+        }
+    });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 
 
 
@@ -279,6 +313,8 @@ function get_tasks() {
 document.addEventListener("DOMContentLoaded", function () {
     get_tasks(); // DOMContentLoaded 事件發生時，執行這裡的程式
 });
+
+
 // <==========   第三步：移除 localStorage 裡的資料  ==========>
 
 // 取得待辦事項的 id
@@ -407,15 +443,18 @@ function items_sort(item_id, direction) {
 // 回存至 localStorage
 // localStorage.setItem("tasks", JSON.stringify(tasks));
 
-let update_star = () => {
-    // let item_id = span_el.closest("li").getAttribute("data-id");
-    let item_id = e.target.closest("li").getAttribute("data-id");
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
-    tasks.forEach(function (task, i) {
-        if (item_id == task.item_id) {
-            tasks[i].star = current_star;
-        }
-    });
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-// localStorage.clear();
+// function update_star() {
+
+
+//     // let item_id = e.target.closest("li").getAttribute("data-id");
+//     // let item_id = span.closest("li").getAttribute("data-id");
+//     // let current_star = span.getAttribute('data-star');
+
+//     let tasks = JSON.parse(localStorage.getItem("tasks"));
+//     tasks.forEach(function (task, i) {
+//         if (item_id == task.item_id) {
+//             tasks[i].star = current_star;
+//         }
+//     });
+//     localStorage.setItem("tasks", JSON.stringify(tasks));
+// }
