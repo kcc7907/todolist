@@ -54,7 +54,7 @@ btn_empty.addEventListener('click', (e) => {
         }
         // setTimeout(() => {
         //     task_list.innerHTML = '';
-        //     localStorage.clear()
+        //     localStorage.clear();
         // }, 1000);
         task_list.addEventListener("transitionend", function clearAll(a) {
             //console.log(a.target);
@@ -62,7 +62,7 @@ btn_empty.addEventListener('click', (e) => {
             task_list.innerHTML = '';
             task_list.removeEventListener("transitionend", clearAll);
         });
-        localStorage.clear()
+        localStorage.clear();
     } else {
         return;
     };
@@ -73,12 +73,24 @@ task_list.addEventListener("click", (e) => {
         let x = confirm('是否確認移除?');
         if (x) {
             e.target.closest("li").classList.add("fade");
+
             e.target.closest("li").addEventListener("transitionend", (a) => {
                 a.target.closest("li").remove();
             });
+            let item_id = e.target.closest("li").getAttribute("data-id");
+            // 從 localStorage 取得資料
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+            let updated_tasks = [];
+            tasks.forEach(function (task, i) {
+                if (item_id != task.item_id) {
+                    updated_tasks.push(task);
+                }
+            });
+            localStorage.setItem("tasks", JSON.stringify(updated_tasks));
         } else {
             return;
         }
+
     };
 });
 
@@ -112,11 +124,22 @@ task_list.addEventListener("click", (e) => {
         if (update.classList.contains("-none")) {
             update.classList.remove("-none");
             para.classList.add("-none");
+
         } else {
             if (update_text == '') {
                 alert('請輸入待辦事項');
             } else {
                 para.innerHTML = update_text;
+                // 
+                let item_id = e.target.closest("li").getAttribute("data-id");
+                let tasks = JSON.parse(localStorage.getItem("tasks"));
+                tasks.forEach(function (task, i) {
+                    if (item_id == task.item_id) {
+                        tasks[i].name = update_text;
+                    }
+                });
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                // 
                 update.classList.add("-none");
                 para.classList.remove("-none");
             }
@@ -155,6 +178,7 @@ task_list.addEventListener('click', (e) => {
 
 // <==========      第六步：重要性的星號      ==========>
 
+
 // task_list.addEventListener('click', (e) => {
 //     if (e.target.parentNode.parentNode.classList[0] === ('star')) {
 //         console.log(e.target.parentNode.parentNode);
@@ -172,20 +196,23 @@ task_list.addEventListener('click', (e) => {
 //     }
 // });
 
+
 task_list.addEventListener('click', (e) => {
-    if (e.target.closest("span").classList[0] === ('star')) {
-        let span = e.target.closest("span");
-        let item_id = span.closest("li").getAttribute("data-id");
-        let current_star = span.getAttribute('data-star');
-        let tasks = JSON.parse(localStorage.getItem("tasks"));
-        tasks.forEach(function (task, i) {
-            if (item_id == task.item_id) {
-                tasks[i].star = current_star;
-            }
-        });
-        localStorage.setItem("tasks", JSON.stringify(tasks));
-        // update_star();
-        get_tasks();
+    if (e.target.closest("span") != null) {
+        if (e.target.closest("span").classList[0] === ('star')) {
+            let span = e.target.closest("span");
+            let item_id = span.closest("li").getAttribute("data-id");
+            let current_star = span.getAttribute('data-star');
+            let tasks = JSON.parse(localStorage.getItem("tasks"));
+            tasks.forEach(function (task, i) {
+                if (item_id == task.item_id) {
+                    tasks[i].star = current_star;
+                }
+            });
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            // update_star();
+            get_tasks();
+        }
     }
 });
 
@@ -272,7 +299,6 @@ function get_tasks() {
     if (tasks) {
         let list_html = "";
         tasks.forEach(function (item, i) {
-
             list_html += `
         <li data-id="${item.item_id}">
           <div class="item_flex">
@@ -302,7 +328,6 @@ function get_tasks() {
           </div>
         </li>
       `;
-
         });
 
         let ul_task_list = document.getElementsByClassName("task_list")[0];
@@ -371,7 +396,7 @@ let update_name = () => {
     let tasks = JSON.parse(localStorage.getItem("tasks"));
     tasks.forEach(function (task, i) {
         if (item_id == task.item_id) {
-            tasks[i].name = update_task_name;
+            tasks[i].name = update_text;
         }
     });
     localStorage.setItem("tasks", JSON.stringify(tasks));
