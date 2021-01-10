@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js'></script>
+</head>
+
+<body>
+  <table id="table">
+    <tr>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+  </table>
+
+  <script>
+    new Vue({
+      el: '#table',
+      data: {
+        rp: '',
+      },
+      methods: {
+
+      },
+      mounted() {
+        let url = 'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
+        axios.get(url).then(res => {
+          this.rp = res;
+          console.log(res);
+        })
+        $.ajax({
+          url: url,
+          method: "GET",
+          crossDomain: true,
+          dataType: 'json',
+          headers: {
+            'Access-Control-Allow-Origin': '*'
+          },
+          success: function (data) {
+            console.log(data);
+
+          },
+        })
+      },
+    })
+  </script>
+</body>
+
+</html>
