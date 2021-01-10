@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>youtube api 串接</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+    <link rel="stylesheet" href="./yt.css">
+</head>
+<body>
+    <main id="YT">
+        <ul>
+            <!-- <li v-for="(item, index) in items" :key="index">
+                <div class="picbox">
+                    <img :src="item.img" >
+                </div>
+                <a :href="item.link"><p>1 {{item.title}}</p></a>
+                <p>3 {{item.id}}</p>
+                <div>2 {{item.timeTitle}}</div>
+                <span v-text="item.description"></span>
+            </li> -->
+            <li v-for="(item, index) in 10" :key="index">
+                <img src="https://picsum.photos/320/180">
+            </li>
+        </ul>
+    </main>
+
+
+    <script>
+        //320*180
+        const ytapi = new Vue({
+            el:'#YT',
+            data:{
+                rp:[],
+                items:[]
+            },
+            mounted() {
+                // AIzaSyDKpfJCOxrXRgVy09mtdpUuB13T2Vrgr5g
+                // AIzaSyCYMLZUpTLHyl6bGYJ36K1TuSzEMWnqwFk
+                // AIzaSyA_XVlQxqqvP3thA7gon6F8qLAJVCTTQEY
+                // AIzaSyC3VUFZzgD565D8kdqJvQxTJo0xX7H0550
+                let key = 'AIzaSyC3VUFZzgD565D8kdqJvQxTJo0xX7H0550';
+                let video;
+                let uWatch = 'https://www.youtube.com/watch?v=';
+                let url =
+                    "https://www.googleapis.com/youtube/v3/search" +
+                    "?" +
+                    `&key=${key}` +
+                    "&part=snippet" +
+                    "&relevanceLanguage=zh-Hant" +
+                    "&regionCode=TW" +
+                    "&type=video" +
+                    "&videoCaption=closedCaption" +
+                    "&maxResults=2" +
+                    "&totalResults=1" +
+                    "&q=周杰倫";
+
+                // fetch(url, { method: 'get' })
+                //     .then(res=> {
+                //         res.json().then(
+                //             function (data) {
+                //                 console.log(data);
+                //                 console.log(data.items);
+                //             }
+                //         )
+                //     }).catch(function (err) {
+                //         console.log('error')
+                //     });
+                // let str = 'PT1H55M57S'
+                // let rex = {
+                //     PT: '',
+                //     H: ':',
+                //     M: ':',
+                //     S: ''
+                // };
+                // str = str.replace(/PT|H|M|S/gi, function (text) {
+                //     return rex[text];
+                // });
+                // let str = 'PT1H55M57S';
+                // let reg = /(\D*)PT(.*)H(.*)M(.*)S(.*)/g;
+                // str.replace(reg, "$1$2:$3:$4");
+                // https://www.youtube.com/watch?v=
+
+                let arr= [], obj = {};
+                axios.get(url).then(res=>{
+                    this.rp = res.data;
+                    res.data.items.forEach( e => {
+                        obj = {
+                            id: e.id.videoId,
+                            img: e.snippet.thumbnails.medium.url,
+                            title: e.snippet.title.slice(0,30),
+                            description: e.snippet.description.slice(0,50) + '...',
+                            link: uWatch+ e.id.videoId
+                        }
+                        arr.push(obj);
+                    });
+                }).then(res => {
+                    this.rp.items.forEach((e,i) => {
+                        video = e.id.videoId;
+                        let durations = 'https://www.googleapis.com/youtube/v3/videos' +
+                                        `?id=${video}` +
+                                        '&part=contentDetails' +
+                                        `&key=${key}`;
+                        axios.get(durations).then(res => {
+                            let rex = {PT: '',H: ':',M: ':',S: ''};
+                            let x = res.data.items[0].contentDetails.duration;
+                            arr[i].timeTitle = x.replace(/PT|H|M|S/gi, text => { return rex[text] });
+                            if(this.rp.items.length === i+1)this.items = arr;
+                        })
+                    });
+                })
+            },
+        })
+    </script>
+</body>
+</html>
