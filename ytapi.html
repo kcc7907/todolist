@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,11 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
     <link rel="stylesheet" href="./yt.css">
 </head>
+
 <body>
     <main id="YT">
         <ul>
-            <!-- <li v-for="(item, index) in items" :key="index">
+            <!-- <li v-for="(item, index) in items" :key="index">\
                 <div class="picbox">
                     <img :src="item.img" >
                 </div>
@@ -30,10 +32,10 @@
     <script>
         //320*180
         const ytapi = new Vue({
-            el:'#YT',
-            data:{
-                rp:[],
-                items:[]
+            el: '#YT',
+            data: {
+                rp: [],
+                items: []
             },
             mounted() {
                 // AIzaSyDKpfJCOxrXRgVy09mtdpUuB13T2Vrgr5g
@@ -82,31 +84,31 @@
                 // str.replace(reg, "$1$2:$3:$4");
                 // https://www.youtube.com/watch?v=
 
-                let arr= [], obj = {};
-                axios.get(url).then(res=>{
+                let arr = [], obj = {};
+                axios.get(url).then(res => {
                     this.rp = res.data;
-                    res.data.items.forEach( e => {
+                    res.data.items.forEach(e => {
                         obj = {
                             id: e.id.videoId,
                             img: e.snippet.thumbnails.medium.url,
-                            title: e.snippet.title.slice(0,30),
-                            description: e.snippet.description.slice(0,50) + '...',
-                            link: uWatch+ e.id.videoId
+                            title: e.snippet.title.slice(0, 30),
+                            description: e.snippet.description.slice(0, 50) + '...',
+                            link: uWatch + e.id.videoId
                         }
                         arr.push(obj);
                     });
                 }).then(res => {
-                    this.rp.items.forEach((e,i) => {
+                    this.rp.items.forEach((e, i) => {
                         video = e.id.videoId;
                         let durations = 'https://www.googleapis.com/youtube/v3/videos' +
-                                        `?id=${video}` +
-                                        '&part=contentDetails' +
-                                        `&key=${key}`;
+                            `?id=${video}` +
+                            '&part=contentDetails' +
+                            `&key=${key}`;
                         axios.get(durations).then(res => {
-                            let rex = {PT: '',H: ':',M: ':',S: ''};
+                            let rex = { PT: '', H: ':', M: ':', S: '' };
                             let x = res.data.items[0].contentDetails.duration;
                             arr[i].timeTitle = x.replace(/PT|H|M|S/gi, text => { return rex[text] });
-                            if(this.rp.items.length === i+1)this.items = arr;
+                            if (this.rp.items.length === i + 1) this.items = arr;
                         })
                     });
                 })
@@ -114,4 +116,5 @@
         })
     </script>
 </body>
+
 </html>
