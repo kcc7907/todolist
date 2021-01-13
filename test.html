@@ -11,16 +11,16 @@
 </head>
 
 <body>
-  <table id="table">
+  <table id="table" border='1'>
     <tr>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
+      <th>縣/市</th>
+      <th>區域</th>
+      <th>名稱</th>
     </tr>
-    <tr>
-      <td>4</td>
-      <td>5</td>
-      <td>6</td>
+    <tr v-for="(item, index) in rp" :key="index">
+      <td>{{item.Region}}</td>
+      <td>{{item.Town}}</td>
+      <td>{{item.Name}}</td>
     </tr>
   </table>
 
@@ -28,30 +28,56 @@
     new Vue({
       el: '#table',
       data: {
-        rp: '',
+        rp: [],
+        test:'123'
       },
       methods: {
 
       },
       mounted() {
-        let url = 'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
-        axios.get(url).then(res => {
-          this.rp = res;
-          console.log(res);
-        })
-        $.ajax({
-          url: url,
-          method: "GET",
-          crossDomain: true,
-          dataType: 'json',
-          headers: {
-            'Access-Control-Allow-Origin': '*'
-          },
-          success: function (data) {
-            console.log(data);
+        // const cors = 'https://cors-anywhere.herokuapp.com/';
+        // const url = 'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
+        const that = this;
+        // $.ajax({
+        //   url: cors + url,
+        //   method: "GET",
+        //   crossDomain: true,
+        //   dataType: 'json',
+        //   success: function (data) {
+        //     console.log(data);
+        //     that.rp = data.XML_Head.Infos.Info;
+        //     console.log(that.rp);
+        //   },
+        //   // complete:(res)=>{
+        //   //   that.rp = res.responseJSON.XML_Head.Infos.Info;
+        //   // }
+        // })
 
-          },
-        })
+        // axios.get(url,{
+        //   headers: {
+        //     // 'x-apikey': '59a7ad19f5a9fa0808f11931',
+        //     'Access-Control-Allow-Origin': url,
+        //     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        //     withCredentials: true,
+        //   },
+        // }).then(res => {
+        //   this.rp = res;
+        //   console.log(res);
+        // })
+
+        var cors = 'https://cors-anywhere.herokuapp.com/';
+        var url = 'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
+        fetch(cors + url, { method: 'get' })
+          .then(function (response) {
+            response.json().then(
+              function (data) {
+                console.log(data);
+                that.rp = data.XML_Head.Infos.Info;
+              }
+            )
+          }).catch(function (err) {
+            console.log('error')
+        });
       },
     })
   </script>
