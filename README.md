@@ -1,8 +1,8 @@
-<h1 align="center">:sandwich: Todolist :sandwich:</h1>
+<h1 align="center">:page_with_curl: Todolist :page_with_curl:</h1>
 
 ### Demo :
 
-https://kcc7907.github.io/MeJaSha/
+https://kcc7907.github.io/todolist/
 
 ### 簡述 :
 
